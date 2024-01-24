@@ -41,7 +41,9 @@
 
 ### 1. git clone
 --- 
-- git clone https://github.com/bignose-flower/skill_share.git
+``` linux
+$ git clone https://github.com/bignose-flower/skill_share.git
+```
 
 ### 1.コンテナ起動
 ---
