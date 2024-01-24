@@ -7,8 +7,3 @@ ENV APP_ROOT /app
 COPY ./spring_project/ $APP_ROOT
 WORKDIR $APP_ROOT
 RUN chmod +x $APP_ROOT/mvnw
-
-# build & run
-# VSCodeから下記のフォルダに接続することで開発ができる
-# dev-toolsをdependencyに設定したのでホットデプロイが可能
-ENTRYPOINT ["sh", "./mvnw", "spring-boot:run"]

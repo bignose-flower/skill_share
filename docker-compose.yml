@@ -37,6 +37,7 @@ services:
     volumes:
       - ./spring/spring_project:/app:cached
     working_dir: /app
+    command: bash -c "./mvnw spring-boot:run"
   # Vue
   frontend:
     container_name: frontend
