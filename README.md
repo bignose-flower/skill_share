@@ -79,7 +79,7 @@ $ yarn dev
 - http://localhost:3001
 - Fetch Data For HelloWorldはAPIから文字列を受け取るボタン
 - Fetch Data For DBはAPI→DBにデータを受け取るボタン
-![Alt text](image.png)
+![Alt text](/image/image.png)
 
 ### 4.DBへの接続確認
 ---
@@ -110,6 +110,6 @@ mysql> select * from sample;
 ---
 - 接続確認
 - http://localhost:8081/hello
-![Alt text](image-1.png)
+![Alt text](/image/image-1.png)
 - http://localhost:8081/testdb
-![Alt text](image-2.png)
+![Alt text](/image/image-2.png)
