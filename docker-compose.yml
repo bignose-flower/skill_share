@@ -1,0 +1,60 @@
+version: '3.7'
+
+services:
+  # Postgres
+  mysql:
+    container_name: mysql
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile
+    environment:
+      - MYSQL_ROOT_PASSWORD=${ROOT}
+      - MYSQL_USER=${USER_NAME}
+      - MYSQL_PASSWORD=${USER_PASS}
+      - MYSQL_DATABASE=${DATABASE}
+      - TZ=${TZ}
+    ports:
+      - "3307:3306"
+    restart: always
+    volumes:
+      - ./mysql/conf.d:/etc/mysql/conf.d
+      - ./log/mysql:/var/log/mysql
+      - ./mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - mysql_db:/var/lib/mysql
+  # Java
+  backend:
+    container_name: backend
+    build: 
+      context: ./spring
+      dockerfile: Dockerfile
+    depends_on:
+      - mysql
+    environment:
+     - TZ=${TZ}
+    ports:
+      - "8081:8080"
+    tty: true
+    volumes:
+      - ./spring/spring_project:/app:cached
+    working_dir: /app
+  # Vue
+  frontend:
+    container_name: frontend
+    build:
+      context: ./vue
+      dockerfile: Dockerfile
+    environment:
+     - TZ=${TZ}
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./vue/vue_project:/usr/src/app:cached
+    stdin_open: true
+    tty: true
+    working_dir: /usr/src/app
+
+# dockerボリュームの設定
+volumes:
+  node_modules:
+  mysql_db:
+    driver: local
