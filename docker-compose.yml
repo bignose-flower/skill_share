@@ -1,25 +1,36 @@
 version: '3.7'
 
+### services移行にコンテナを定義する
 services:
-  # Postgres
+  # mysql
   mysql:
+  # コンテナ名
     container_name: mysql
+  # イメージを作成するDockerfile情報について定義
     build:
       context: ./mysql
       dockerfile: Dockerfile
+  # コンテナ内で使用する環境変数を定義
     environment:
       - MYSQL_ROOT_PASSWORD=${ROOT}
       - MYSQL_USER=${USER_NAME}
       - MYSQL_PASSWORD=${USER_PASS}
       - MYSQL_DATABASE=${DATABASE}
       - TZ=${TZ}
+  # ポート指定<ホスト側のポート>:<コンテナ側のポート>
+  # ブラウザからアクセスする時は、<ホスト側のポート>を指定
     ports:
       - "3307:3306"
+  # サーバが落ちても常に再起動するようにする
     restart: always
+  # ホスト側のフォルダをコンテナ側のフォルダにマウント
     volumes:
       - ./mysql/conf.d:/etc/mysql/conf.d
       - ./log/mysql:/var/log/mysql
       - ./mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      # コンテナ側のファイルをdockerボリュームにマウント
+      # dockerボリュームはデータが永続化するための仕組み
+      # イメージを削除してもDockerボリュームは残るので、データは消えないようになる。
       - mysql_db:/var/lib/mysql
   # Java
   backend:
@@ -33,10 +44,15 @@ services:
      - TZ=${TZ}
     ports:
       - "8081:8080"
+  # bashなどでログインして、コマンドなどで操作できるようにする
     tty: true
     volumes:
       - ./spring/spring_project:/app:cached
+      - ./log/spring:/app/log
+  # コンテナ起動時のデフォルトのディレクトリを指定
     working_dir: /app
+  # コンテナ起動時のコマンドを指定。
+  # 今回はコンテナ起動と同時にSpringBootプロジェクトを起動する
     command: bash -c "./mvnw spring-boot:run"
   # Vue
   frontend:
@@ -58,4 +74,3 @@ services:
 volumes:
   node_modules:
   mysql_db:
-    driver: local
