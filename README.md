@@ -2,6 +2,7 @@
 概要 : Dockerでのローカル開発環境の構築手順について記載
 
 ### フォルダ構成
+<pre>
 .
 ├── README.md
 ├── delete.sh                      # imageとコンテナを一括で削除するスクリプト
@@ -18,6 +19,7 @@
 └── vue
     ├── Dockerfile                 # nuxtのイメージ定義ファイル
     └── vue_project                # nuxtのプロジェクトフォルダ
+</pre>
 
 ### コンテナ起動
 - docker-compose.ymlファイルがある箇所で下記のコマンドを実行
