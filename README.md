@@ -41,6 +41,12 @@
 
 ### 1. git clone
 --- 
+> [!CAUTION]
+> Windowsの場合は改行コードがLFからCRLFに自動変換されてしまうので、改行コードの変更を無効化する
+> ``` linux
+> $ git confiig --global core.autocrlf input
+> ```
+> 上記の設定によりコミット時はCRLF→LF変換。pull時は無変換となる。
 ``` linux
 $ git clone https://github.com/bignose-flower/skill_share.git
 ```
