@@ -9,11 +9,23 @@
 - 現状root権限のみでしか利用できない。
 - IDEはVSCodeを想定。(他のエディタではWSLとの親和性がない。)
 
+#### VSCodeで必要となるExtension
+- Java
+    - Extension Pack for Java
+    - Spring Boot Extension Pack
+- Vue
+    - xxxxxxx
+- mysql
+    - MySQL
+- Docker
+    - Docker
+    - hadolint(セキュリティ観点でのlinter)
+
 ### 目的 
 ---
 - コンテナによる開発環境を作成することで環境開発負担を削減する
 - 同じバージョンを利用することができる。
-- 個人的な学習目的
+- 個人的な学習目的も含まれています。
 
 ### システム構成
 フロント(vue + nuxt) ⇔ バックエンド(Java + SprintBoot) ⇔ DB(mysql)
