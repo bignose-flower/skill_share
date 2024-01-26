@@ -32,6 +32,8 @@ services:
       # dockerボリュームはデータが永続化するための仕組み
       # イメージを削除してもDockerボリュームは残るので、データは消えないようになる。
       - mysql_db:/var/lib/mysql
+    networks:
+      - sample_network
   # Java
   backend:
     container_name: backend
@@ -54,6 +56,8 @@ services:
   # コンテナ起動時のコマンドを指定。
   # 今回はコンテナ起動と同時にSpringBootプロジェクトを起動する
     command: bash -c "./mvnw spring-boot:run"
+    networks:
+      - sample_network
   # Vue
   frontend:
     container_name: frontend
@@ -69,8 +73,13 @@ services:
     stdin_open: true
     tty: true
     working_dir: /usr/src/app
-
+    networks:
+        - sample_network
 # dockerボリュームの設定
 volumes:
   node_modules:
   mysql_db:
+
+# ネットワークを指定
+networks:
+  sample_network:

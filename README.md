@@ -14,7 +14,7 @@
     - Extension Pack for Java
     - Spring Boot Extension Pack
 - Vue
-    - xxxxxxx
+    - Vue Language Features
 - mysql
     - MySQL
 - Docker

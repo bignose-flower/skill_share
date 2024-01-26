@@ -1,10 +1,13 @@
-package com.example.demo_intelij.testdb;
+package com.example.demo_intelij.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+// @Entity : Entityクラスであることを示す
+// Entityクラスはテーブルのデータそのものを示すクラス
+// Sampleクラスの場合は、sampleテーブル : [idカラム,column1カラム]という構成になっていることがわかる
 @Entity
 public class Sample {
     @Id
