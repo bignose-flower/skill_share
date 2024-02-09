@@ -6,7 +6,7 @@ CREATE TABLE sample (
 );
 
 INSERT INTO sample (column1) VALUES
-('Data 1'),
+('テスト'),
 ('Data 2'),
 ('Data 3');
 

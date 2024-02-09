@@ -1,6 +1,7 @@
 FROM eclipse-temurin:17.0.9_9-jdk
 
 ENV APP_ROOT /app
+ENV TZ Asia/Tokyo
 
 COPY ./spring_project/ $APP_ROOT
 WORKDIR $APP_ROOT

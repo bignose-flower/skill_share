@@ -16,7 +16,6 @@ services:
       - MYSQL_USER=${USER_NAME}
       - MYSQL_PASSWORD=${USER_PASS}
       - MYSQL_DATABASE=${DATABASE}
-      - TZ=${TZ}
   # ポート指定<ホスト側のポート>:<コンテナ側のポート>
   # ブラウザからアクセスする時は、<ホスト側のポート>を指定
     ports:
@@ -42,8 +41,6 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - mysql
-    environment:
-     - TZ=${TZ}
     ports:
       - "8081:8080"
   # bashなどでログインして、コマンドなどで操作できるようにする
@@ -64,8 +61,6 @@ services:
     build:
       context: ./vue
       dockerfile: Dockerfile
-    environment:
-     - TZ=${TZ}
     ports:
       - "3001:3000"
     volumes:
