@@ -97,7 +97,6 @@ $ yarn dev
 - http://localhost:3001
 - Fetch Data For HelloWorldはAPIから文字列を受け取るボタン
 - Fetch Data For DBはAPI→DBにデータを受け取るボタン
-![Alt text](/image/image.png)
 
 ### 4.DBへの接続確認
 ---
@@ -131,3 +130,95 @@ mysql> select * from sample;
 ![Alt text](/image/image-1.png)
 - http://localhost:8081/testdb
 ![Alt text](/image/image-2.png)
+
+
+### 変更1. DBコンテナの再ビルド(ロケールパッケージ追加対応)
+---
+
+1. docker-compose.ymlの編集
+24行目の起動設定をコメントアウトにする
+alwaysにすると、この後にコンテナを停止してもまた勝手に起動してしまう。
+``` Linux
+$ sed -i 's/restart: always/#restart: always/' ./docker-compose.yml
+```
+
+- DBコンテナのみを一旦削除して、再ビルドを行います。
+2. mysqlコンテナの停止と削除
+``` Linux
+# skill_shareのルートディレクトリに移動
+# 現在稼働中のコンテナをチェック
+$ docker-compose ps
+
+# dbコンテナの停止
+$ docker-compose stop mysql
+
+# mysqlコンテナが停止したかチェック
+# STATUSがExitedになっていれば停止状態
+$ docker-compose ps -a
+NAME       IMAGE                  COMMAND                  SERVICE    CREATED             STATUS                      PORTS
+backend    skill_share-backend    "/__cacert_entrypoin…"   backend    About an hour ago   Up 2 minutes                0.0.0.0:8081->8080/tcp
+frontend   skill_share-frontend   "docker-entrypoint.s…"   frontend   About an hour ago   Up 2 minutes                0.0.0.0:3001->3000/tcp
+mysql      skill_share-mysql      "docker-entrypoint.s…"   mysql      6 minutes ago       Exited (0) 50 seconds ago
+
+# mysqlコンテナの削除
+# 削除するか確認があるので、「y」を入力
+$ docker-compose rm mysql
+
+# コンテナの状態確認
+$ docker-compose ps -a
+NAME       IMAGE                  COMMAND                  SERVICE    CREATED             STATUS         PORTS
+backend    skill_share-backend    "/__cacert_entrypoin…"   backend    About an hour ago   Up 4 minutes   0.0.0.0:8081->8080/tcp
+frontend   skill_share-frontend   "docker-entrypoint.s…"   frontend   About an hour ago   Up 4 minutes   0.0.0.0:3001->3000/tcp
+```
+
+3. docker ボリュームの削除
+```
+# docker volumeの確認
+$ docker volume ls
+local     skill_share_mysql_db
+
+# 削除
+$ docker volume rm skill_share_mysql_db
+
+# 確認
+$ docker volume ls
+```
+
+4. mysqlのDockerfileの設定確認
+    - 修正したDockerfileにてロケールパッケージのinstallするコードがあるか確認
+
+5. mysqlイメージ及びコンテナの起動
+```
+# イメージの作成
+# --no-cacheを指定することでcacheの利用を回避し、新規にimageを作成する
+$ docker-compose build --no-cache mysql
+
+# restart設定のコメントアウトを解除
+$ sed -i 's/#restart: always/restart: always/' ./docker-compose.yml
+
+# mysqlコンテナのみ起動を行う。
+# -dでバックグラウンドとして起動する。
+$ docker-compose up -d mysql
+
+# 最終的なコンテナの稼働状況を確認
+# mysqlコンテナの稼働を確認できる
+$ docker-compose ps
+backend    skill_share-backend    "/__cacert_entrypoin…"   backend    2 hours ago      Up 11 minutes   0.0.0.0:8081->8080/tcp
+frontend   skill_share-frontend   "docker-entrypoint.s…"   frontend   2 hours ago      Up 11 minutes   0.0.0.0:3001->3000/tcp
+mysql      skill_share-mysql      "docker-entrypoint.s…"   mysql      17 seconds ago   Up 15 seconds   33060/tcp, 0.0.0.0:3307->3306/tcp
+```
+
+6. 不要になったmysqlイメージを削除
+```
+# 不要imageの確認
+# <none>となっているimageがあれば、それはmysqlの残骸となったimageなので削除する
+$ docker images
+...中略
+<none>                          <none>    1c88e5a39bad   About an hour ago   637MB
+
+# imageの削除
+$ docker rmi <IMAGE ID>
+
+# 確認
+docker images
+```
